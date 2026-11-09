@@ -1,4 +1,5 @@
 oryginalny plik YAML:
+
 services:
   web:
     image: nginx
