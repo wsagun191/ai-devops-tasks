@@ -1,0 +1,63 @@
+jenkins:
+  # Podstawowe ustawienia (liczba wykonawców)
+  numExecutors: 4
+  quietPeriod: 5
+  scmCheckoutRetryCount: 2
+  
+  # Globalne właściwości systemowe / timeouty (np. timeout sesji lub globalne timeouty buildów)
+  globalNodeProperties:
+    - envVars:
+        env:
+          - key: "DEFAULT_TIMEOUT_MINUTES"
+            value: "60"
+
+unclassified:
+  # Konfiguracja globalna (np. lokalizacja Jenkinsa)
+  location:
+    url: "http://localhost:8080/"
+
+# Globalny katalog narzędzi (Maven, Node.js)
+tool:
+  maven:
+    installations:
+      - name: "Maven 3.8.8"
+        properties:
+          - installSource:
+              installers:
+                - maven:
+                    id: "3.8.8"
+                    
+  nodejs:
+    installations:
+      - name: "NodeJS 18"
+        properties:
+          - installSource:
+              installers:
+                - nodeJS:
+                    id: "18.16.0"
+
+# Definicja zadań (w tym przykładowy Pipeline)
+jobs:
+  - script: >
+      pipeline {
+          agent any
+          tools {
+              nodejs "NodeJS 18"
+              maven "Maven 3.8.8"
+          }
+          stages {
+              stage('Weryfukj Środowisko') {
+                  steps {
+                      echo 'Sprawdzanie wersji narzędzi...'
+                      sh 'node -v'
+                      sh 'npm -v'
+                      sh 'mvn -version'
+                  }
+              }
+              stage('Przykładowy Krok') {
+                  steps {
+                      echo 'Pipeline JCasC działa poprawnie!'
+                  }
+              }
+          }
+      }
